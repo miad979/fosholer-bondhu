@@ -1,22 +1,10 @@
-# ফসলের বন্ধু (Fosholer Bondhu) - AI Agricultural Assistant
+# Smart Farming
 
-An AI-powered mobile application to help farmers in Bangladesh identify crop diseases and get treatment advice. This is an IDP project.
+## AI-powered Edge Computer Vision & Predictive Analytics for Crop Health
 
-## Project Phases
+Smart Farming is a mobile-first, edge-first agricultural assistant that helps farmers diagnose crop diseases from photos, receive actionable advice in local languages, and get predictive alerts. The project focuses on offline-capable on-device inference using TensorFlow Lite, an intuitive Flutter mobile UI, and practical deployment for smallholder farmers.
 
-### Phase 1: AI Model Development (Current Focus)
--   [ ] Select the first target crop (e.g., Potato).
--   [ ] Gather and preprocess a dataset of healthy and diseased leaves.
--   [ ] Train a Convolutional Neural Network (CNN) using Transfer Learning (e.g., MobileNetV2) for disease classification.
--   [ ] Convert the trained model to TensorFlow Lite (`.tflite`) format for mobile deployment.
-
-### Phase 2: Mobile Application
--   [ ] Develop a cross-platform mobile app (e.g., using Flutter or React Native).
--   [ ] Create a simple UI to capture or upload an image.
--   [ ] Integrate the `.tflite` model into the app to perform inference.
--   [ ] Display the prediction result (disease name) to the user.
-
-### Phase 3: Advice and Integration
--   [ ] Create a database (e.g., a JSON file) of treatment advice for each disease in Bengali.
--   [ ] Display the appropriate advice based on the model's prediction.
--   [ ] Add advanced features like a Bengali NLP chatbot or weather integration.
+Quick links:
+- models/: trained models and TFLite artifacts
+- notebooks/: data exploration and training notebooks
+- src/: app and server prototypes
