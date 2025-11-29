@@ -1,46 +1,75 @@
-"""
-Flask application for Potato Disease Prediction.
-Provides a web interface for users to upload images and get disease predictions.
-"""
-
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, request, render_template
+import tensorflow as tf
+import numpy as np
+from PIL import Image
+import io
 
 app = Flask(__name__)
 
-# Placeholder prediction constants (to be replaced with ML model integration)
-PLACEHOLDER_LABEL = 'Early Blight'
-PLACEHOLDER_PROBABILITY = 0.84
-
+# --- Load Model and Define Constants (Global Scope) ---
+# This ensures the model is loaded only once when the app starts.
+try:
+    model = tf.keras.models.load_model('models/potato_disease_model.h5')
+    # Define the class names from the training notebook
+    CLASS_NAMES = ['Potato___Early_blight', 'Potato___healthy', 'Potato___Late_blight']
+    # Define the expected image size
+    IMG_SIZE = (224, 224)
+except Exception as e:
+    print(f"Error loading model: {e}")
+    model = None
 
 @app.route('/')
-def index():
-    """Render the main page with the upload form."""
+def home():
     return render_template('index.html')
-
 
 @app.route('/predict', methods=['POST'])
 def predict():
-    """
-    Handle image upload and return disease prediction.
-    
-    Returns JSON with label and probability for the happy path.
-    Currently returns placeholder values (no ML model integration yet).
-    """
+    if model is None:
+        return "Model not loaded. Please check server logs.", 500
+
     if 'file' not in request.files:
-        return jsonify({'error': 'No file provided'}), 400
+        return "No file part", 400
     
     file = request.files['file']
-    if file.filename == '':
-        return jsonify({'error': 'No file selected'}), 400
     
-    # Placeholder prediction response
-    # TODO: Integrate actual ML model for real predictions
-    return jsonify({
-        'label': PLACEHOLDER_LABEL,
-        'probability': PLACEHOLDER_PROBABILITY
-    })
+    if file.filename == '':
+        return "No selected file", 400
+        
+    if file:
+        try:
+            # 1. Read image from the request stream
+            img_bytes = file.read()
+            img = Image.open(io.BytesIO(img_bytes)).convert('RGB')
+            
+            # 2. Preprocess the image for the model
+            img = img.resize(IMG_SIZE)
+            img_array = tf.keras.preprocessing.image.img_to_array(img)
+            # Use the specific preprocessing for MobileNetV2
+            img_array = tf.keras.applications.mobilenet_v2.preprocess_input(img_array)
+            img_array = tf.expand_dims(img_array, 0)  # Create a batch
 
+            # 3. Make a prediction
+            predictions = model.predict(img_array)
+            
+            # 4. Get the top prediction
+            predicted_index = np.argmax(predictions[0])
+            predicted_class = CLASS_NAMES[predicted_index]
+            # Convert numpy float to a standard Python float for JSON serialization
+            confidence = float(predictions[0][predicted_index]) 
+            
+            # 5. Format the class name for display
+            display_label = predicted_class.replace("Potato___", "").replace("_", " ")
+
+            # 6. Return the result as JSON
+            return {
+                "label": display_label,
+                "probability": confidence
+            }
+        except Exception as e:
+            print(f"Error during prediction: {e}")
+            return "Error processing the image", 500
+            
+    return "Something went wrong", 500
 
 if __name__ == '__main__':
-    # NOTE: debug=True is for development only; disable in production
     app.run(debug=True)
