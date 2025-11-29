@@ -1,6 +1,4 @@
+Flask
 tensorflow
-opencv-python
-matplotlib
-scikit-learn
-jupyter
-flask
+Pillow
+numpy
