@@ -26,6 +26,9 @@ import os
 plt.style.use('seaborn-v0_8-darkgrid')
 sns.set_palette("husl")
 
+# Set random seed for reproducibility
+np.random.seed(42)
+
 # Create Figures directory
 FIGURES_DIR = 'Figures'
 os.makedirs(FIGURES_DIR, exist_ok=True)
@@ -638,7 +641,6 @@ def generate_confidence_distribution():
     """
     # Generate realistic confidence distribution
     # Use beta distribution to create a realistic skewed distribution
-    np.random.seed(42)  # For reproducibility
     
     # Create a distribution with mean ~89% and median ~92%
     # Beta distribution with higher values
