@@ -2,6 +2,24 @@
 
 An AI-powered mobile application to help farmers in Bangladesh identify crop diseases and get treatment advice. This is an IDP project.
 
+## 📊 Presentation
+
+A professional PowerPoint presentation for this project is available! 
+
+**Quick Start:**
+```bash
+pip install python-pptx
+python generate_presentation.py
+```
+
+This generates a comprehensive 21-slide presentation covering:
+- Project introduction and motivation
+- System architecture and implementation
+- Results and evaluation metrics
+- Future work and conclusions
+
+For details, see [`QUICKSTART.md`](QUICKSTART.md) and [`PRESENTATION_README.md`](PRESENTATION_README.md).
+
 ## Project Phases
 
 ### Phase 1: AI Model Development (Current Focus)
